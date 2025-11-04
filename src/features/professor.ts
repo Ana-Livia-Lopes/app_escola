@@ -116,7 +116,6 @@ export default class Professor {
                 }
             }
             const professor = new Professor(uid, nome, email);
-            this._professor = professor;
             return {
                 status: Status.okay,
                 resultado: professor,

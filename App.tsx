@@ -15,7 +15,9 @@ export default function App() {
             backgroundColor: '#8b9fc0ff',
           },
           headerTintColor: '#ffffffff',
-        }}>
+        }}
+        initialRouteName='Autenticacao'
+      >
         {(Object.entries(screens).map(([name, config]) =>
           <Drawer.Screen
             key={"Screen." + name}

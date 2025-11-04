@@ -2,17 +2,33 @@ import React, { useState } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationParameter } from "../features/navigation";
 import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import Professor from '../features/professor';
+import { Status } from '../features/result';
+
+interface FormEntrar {
+    email: string;
+    senha: string;
+}
 
 export default function Autenticacao({ navigation }: NavigationParameter<"Autenticacao">) {
+    const [ form, setForm ] = useState<FormEntrar>({
+        email: "",
+        senha: "",
+    });
 
-    const entrar = () => {
-        Alert.alert('Alert', 'fazer depois', [{ text: 'OK' }]);
+    const entrar = async () => {
+        const resultado = await Professor.entrar(form.email, form.senha);
+        if (resultado.status === Status.erro) {
+            Alert.alert("Erro ao entrar", resultado.mensagem, [{ text: "Ok" }])
+        } else {
+            navigation.navigate("Inicio")
+        }
+        // Alert.alert('Alert', 'fazer depois', [{ text: 'OK' }]);
     }
 
     const cadastrar = () => {
-        Alert.alert('Alert', 'fazer depois', [{ text: 'OK' }]);
+        navigation.navigate("CadastroProfessor");
     }
-
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#8b9fc0ff' }}>
@@ -26,6 +42,7 @@ export default function Autenticacao({ navigation }: NavigationParameter<"Autent
                         style={styles.input}
                         keyboardType="email-address"
                         autoCapitalize="none"
+                        onChangeText={(email) => setForm(() => ({ ...form, email }))}
                     />
 
                     <Text style={styles.label}>Senha</Text>
@@ -34,6 +51,7 @@ export default function Autenticacao({ navigation }: NavigationParameter<"Autent
                         placeholder="Digite sua senha"
                         style={styles.input}
                         secureTextEntry
+                        onChangeText={(senha) => setForm(() => ({ ...form, senha }))}
                     />
 
                     <TouchableOpacity style={styles.botaoEntrar} onPress={entrar}>
