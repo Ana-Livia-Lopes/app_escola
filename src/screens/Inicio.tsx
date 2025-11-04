@@ -1,13 +1,29 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Alert, Modal, TextInput } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { NavigationParameter } from "../features/navigation";
 
-export default function Inicio() {
+export default function Inicio({ navigation }: NavigationParameter<"Inicio">) {
 
-    const alertCadastroTurma = () => Alert.alert('Atenção', 'vou fazer ainda');
-    const alerteditarTurma = () => Alert.alert('Atenção', 'vou fazer ainda');
-    const alertExcluirTurma = () => Alert.alert('Atenção', 'Você tem certeza que deseja excluir esta turma?');
-    const alertSair = () => Alert.alert('Atenção', 'Você tem certeza que deseja sair da sua conta?');
+    const [modalEditarVisible, setModalEditarVisible] = useState(false);
+
+    const alertExcluirTurma = () => Alert.alert(
+        'Atenção',
+        'Deseja realmente excluir a turma?',
+        [
+            { text: 'Não', style: 'cancel' },
+            { text: 'Sim, excluir', style: 'destructive', onPress: () => Alert.alert('Excluído', 'Turma excluída') }
+        ]
+    );
+
+    const alertSair = () => Alert.alert(
+        'Atenção',
+        'Você tem certeza que deseja sair da sua conta?',
+        [
+            { text: 'Cancelar', style: 'cancel' },
+            { text: 'Sair', style: 'destructive', onPress: () => Alert.alert('Sessão encerrada', 'Você saiu') }
+        ]
+    );
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#8b9fc0ff" }}>
@@ -19,7 +35,7 @@ export default function Inicio() {
                     </View>
                 </View>
 
-                <TouchableOpacity style={styles.BotaoCadastrar} onPress={alertCadastroTurma}>
+                <TouchableOpacity style={styles.BotaoCadastrar} onPress={() => navigation.navigate('CadastroTurma')}>
                     <Text style={styles.txtBotaoCadastrar}>Cadastrar turma</Text>
                 </TouchableOpacity>
 
@@ -32,10 +48,10 @@ export default function Inicio() {
                             <Text style={styles.tag}>gh6fs02j</Text>
                         </View>
                         <View style={styles.acoes}>
-                            <TouchableOpacity style={styles.BotaoEditar} onPress={alerteditarTurma}>
+                            <TouchableOpacity style={styles.BotaoEditar} onPress={() => setModalEditarVisible(true)}>
                                 <Text style={styles.txtBotao}>Editar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.BotaoExcluir} onPress={alertExcluirTurma}>
+                            <TouchableOpacity style={styles.BotaoExcluir} onPress={() => alertExcluirTurma()}>
                                 <Text style={styles.txtBotao}>Excluir</Text>
                             </TouchableOpacity>
                         </View>
@@ -47,10 +63,10 @@ export default function Inicio() {
                             <Text style={styles.tag}>f8sm30sx</Text>
                         </View>
                         <View style={styles.acoes}>
-                            <TouchableOpacity style={styles.BotaoEditar} onPress={alerteditarTurma}>
+                            <TouchableOpacity style={styles.BotaoEditar} onPress={() => setModalEditarVisible(true)}>
                                 <Text style={styles.txtBotao}>Editar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.BotaoExcluir} onPress={alertExcluirTurma}>
+                            <TouchableOpacity style={styles.BotaoExcluir} onPress={() => alertExcluirTurma()}>
                                 <Text style={styles.txtBotao}>Excluir</Text>
                             </TouchableOpacity>
                         </View>
@@ -62,15 +78,43 @@ export default function Inicio() {
                             <Text style={styles.tag}>l8sg5cj1</Text>
                         </View>
                         <View style={styles.acoes}>
-                            <TouchableOpacity style={styles.BotaoEditar} onPress={alerteditarTurma}>
+                            <TouchableOpacity style={styles.BotaoEditar} onPress={() => setModalEditarVisible(true)}>
                                 <Text style={styles.txtBotao}>Editar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.BotaoExcluir} onPress={alertExcluirTurma}>
+                            <TouchableOpacity style={styles.BotaoExcluir} onPress={() => alertExcluirTurma()}>
                                 <Text style={styles.txtBotao}>Excluir</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 </ScrollView>
+
+                
+
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalEditarVisible}
+                    onRequestClose={() => setModalEditarVisible(false)}
+                >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.modalTitle}>Editar Turma</Text>
+                            <Text style={styles.label}>Nome da Turma</Text>
+                            <TextInput style={styles.input} placeholder="Ex: 3ºA" defaultValue="3ºA" />
+                            <Text style={styles.label}>Quantidade</Text>
+                            <TextInput style={styles.input} placeholder="Ex: 30" defaultValue="30" keyboardType='numeric'/>
+
+                            <View style={styles.modalButtons}>
+                                <TouchableOpacity style={[styles.modalButton, styles.buttonCancel]} onPress={() => setModalEditarVisible(false)}>
+                                    <Text style={styles.textButtonCancel}>Cancelar</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.modalButton, styles.buttonConfirm]} onPress={() => setModalEditarVisible(false)}>
+                                    <Text style={styles.textButtonConfirm}>Salvar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
 
                 <TouchableOpacity style={styles.BotaoSair} onPress={alertSair}>
                     <Text style={styles.txtBotaoSair}>Sair</Text>
@@ -177,4 +221,70 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: '700'
     },
+
+    // Estilos do Modal
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    },
+    modalView: {
+        width: '85%',
+        backgroundColor: 'white',
+        borderRadius: 12,
+        padding: 18,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#0B3D91',
+        marginBottom: 12,
+        textAlign: 'center'
+    },
+    label: {
+        fontSize: 14,
+        color: '#0B3D91',
+        marginBottom: 6,
+        fontWeight: '600'
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 6,
+        padding: 10,
+        marginBottom: 12,
+        fontSize: 16
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 6
+    },
+    modalButton: {
+        flex: 1,
+        padding: 10,
+        borderRadius: 6,
+        marginHorizontal: 6,
+        alignItems: 'center'
+    },
+    buttonCancel: {
+        backgroundColor: '#D9534F'
+    },
+    buttonConfirm: {
+        backgroundColor: '#1E5CC8'
+    },
+    textButtonCancel: {
+        color: '#fff',
+        fontWeight: '700'
+    },
+    textButtonConfirm: {
+        color: '#fff',
+        fontWeight: '700'
+    }
 });
