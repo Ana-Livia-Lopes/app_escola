@@ -96,7 +96,9 @@ export default function Inicio({ navigation }: NavigationParameter<"Inicio">) {
                             <Text style={styles.label}>Nome da Turma</Text>
                             <TextInput style={styles.input} placeholder="Ex: 3ºA" defaultValue="3ºA" />
                             <Text style={styles.label}>Quantidade</Text>
-                            <TextInput style={styles.input} placeholder="Ex: 30" defaultValue="30" keyboardType='numeric'/>
+                            <TextInput style={styles.input} placeholder="Ex: 30" keyboardType='numeric'/>
+                            <Text style={styles.label}>Disciplina</Text>
+                            <TextInput style={styles.input} placeholder="Ex: Matemática" />
 
                             <View style={styles.modalButtons}>
                                 <TouchableOpacity style={[styles.modalButton, styles.buttonCancel]} onPress={() => setModalEditarVisible(false)}>
