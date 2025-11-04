@@ -7,7 +7,6 @@ import CadastroAtividade from "../screens/CadastroAtividade";
 import CadastroTurma from "../screens/CadastroTurma";
 import Inicio from "../screens/Inicio";
 import ListarAtividades from "../screens/ListarAtividades";
-import ListarTurmas from "../screens/ListarTurmas";
 import CadastroProfessor from "../screens/CadastroProfessor";
 
 type NativeStackNavigationOptionsCallback = (props: {
@@ -32,14 +31,45 @@ class Screens {
 
     Inicio: ParamItem<"Inicio"> = { 
         component: Inicio,
-
+        options: {
+            title: "Início",
+            
+        }
     };
-    Autenticacao: ParamItem<"Autenticacao"> = { component: Autenticacao };
-    CadastroAtividade: ParamItem<"CadastroAtividade"> = { component: CadastroAtividade };
-    CadastroTurma: ParamItem<"CadastroTurma"> = { component: CadastroTurma };
-    CadastroProfessor: ParamItem<"CadastroProfessor"> = { component: CadastroProfessor };
-    ListarAtividades: ParamItem<"ListarAtividades"> = { component: ListarAtividades }
-    ListarTurmas: ParamItem<"ListarTurmas"> = { component: ListarTurmas }
+    Autenticacao: ParamItem<"Autenticacao"> = {
+        component: Autenticacao,
+        options: {
+            drawerItemStyle: { display: "none" },
+            title: "Entrar",
+            headerLeft: () => null
+        }
+    };
+    CadastroAtividade: ParamItem<"CadastroAtividade"> = {
+        component: CadastroAtividade,
+        options: {
+            title: "Cadastrar Atividade"
+        }
+    };
+    CadastroTurma: ParamItem<"CadastroTurma"> = {
+        component: CadastroTurma,
+        options: {
+            title: "Cadastrar Turma"
+        }
+    };
+    CadastroProfessor: ParamItem<"CadastroProfessor"> = {
+        component: CadastroProfessor,
+        options: {
+            drawerItemStyle: { display: "none" },
+            title: "Cadastrar Professor"
+        }
+    };
+    ListarAtividades: ParamItem<"ListarAtividades"> = {
+        component: ListarAtividades,
+        options: {
+            drawerItemStyle: { display: "none" },
+            title: "Listar Atividades"
+        }
+    };
 
     static readonly instance = new Screens();
 }
