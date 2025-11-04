@@ -2,8 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
-export default function TelaProfessor() {
-    const professorNome = 'luisão (felipe cardoso)';
+export default function Inicio() {
 
     const alertCadastroTurma = () => Alert.alert('Atenção', 'vou fazer ainda');
     const alerteditarTurma = () => Alert.alert('Atenção', 'vou fazer ainda');
@@ -16,12 +15,12 @@ export default function TelaProfessor() {
                 <View style={styles.header}>
                     <Image source={require('../../assets/logo.png')} style={styles.logo} />
                     <View style={styles.headerRight}>
-                        <Text style={styles.profNome}>{professorNome}</Text>
+                        <Text style={styles.profNome}>{'luisão (felipe cardoso)'}</Text>
                     </View>
                 </View>
 
-                <TouchableOpacity style={styles.btnCadastrar} onPress={alertCadastroTurma}>
-                    <Text style={styles.txtBtnCadastrar}>Cadastrar turma</Text>
+                <TouchableOpacity style={styles.BotaoCadastrar} onPress={alertCadastroTurma}>
+                    <Text style={styles.txtBotaoCadastrar}>Cadastrar turma</Text>
                 </TouchableOpacity>
 
                 <Text style={styles.tituloLista}>Minhas turmas</Text>
@@ -33,11 +32,11 @@ export default function TelaProfessor() {
                             <Text style={styles.tag}>gh6fs02j</Text>
                         </View>
                         <View style={styles.acoes}>
-                            <TouchableOpacity style={styles.btnVisualizar} onPress={alerteditarTurma}>
-                                <Text style={styles.txtBtn}>Visualizar</Text>
+                            <TouchableOpacity style={styles.BotaoEditar} onPress={alerteditarTurma}>
+                                <Text style={styles.txtBotao}>Editar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.btnExcluir} onPress={alertExcluirTurma}>
-                                <Text style={styles.txtBtn}>Excluir</Text>
+                            <TouchableOpacity style={styles.BotaoExcluir} onPress={alertExcluirTurma}>
+                                <Text style={styles.txtBotao}>Excluir</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -48,11 +47,11 @@ export default function TelaProfessor() {
                             <Text style={styles.tag}>f8sm30sx</Text>
                         </View>
                         <View style={styles.acoes}>
-                            <TouchableOpacity style={styles.btnVisualizar} onPress={alerteditarTurma}>
-                                <Text style={styles.txtBtn}>Visualizar</Text>
+                            <TouchableOpacity style={styles.BotaoEditar} onPress={alerteditarTurma}>
+                                <Text style={styles.txtBotao}>Editar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.btnExcluir} onPress={alertExcluirTurma}>
-                                <Text style={styles.txtBtn}>Excluir</Text>
+                            <TouchableOpacity style={styles.BotaoExcluir} onPress={alertExcluirTurma}>
+                                <Text style={styles.txtBotao}>Excluir</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -63,18 +62,18 @@ export default function TelaProfessor() {
                             <Text style={styles.tag}>l8sg5cj1</Text>
                         </View>
                         <View style={styles.acoes}>
-                            <TouchableOpacity style={styles.btnVisualizar} onPress={alerteditarTurma}>
-                                <Text style={styles.txtBtn}>Visualizar</Text>
+                            <TouchableOpacity style={styles.BotaoEditar} onPress={alerteditarTurma}>
+                                <Text style={styles.txtBotao}>Editar</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.btnExcluir} onPress={alertExcluirTurma}>
-                                <Text style={styles.txtBtn}>Excluir</Text>
+                            <TouchableOpacity style={styles.BotaoExcluir} onPress={alertExcluirTurma}>
+                                <Text style={styles.txtBotao}>Excluir</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 </ScrollView>
 
-                <TouchableOpacity style={styles.btnSair} onPress={alertSair}>
-                    <Text style={styles.txtBtnSair}>Sair</Text>
+                <TouchableOpacity style={styles.BotaoSair} onPress={alertSair}>
+                    <Text style={styles.txtBotaoSair}>Sair</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -107,7 +106,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '600'
     },
-    btnSair: {
+    BotaoSair: {
         marginTop: 12,
         alignSelf: 'stretch',
         backgroundColor: '#083067',
@@ -116,16 +115,16 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         alignItems: 'center'
     },
-    txtBtnSair: { color: '#fff', fontWeight: '600' },
+    txtBotaoSair: { color: '#fff', fontWeight: '600' },
 
-    btnCadastrar: {
+    BotaoCadastrar: {
         backgroundColor: '#1E5CC8',
         padding: 12,
         borderRadius: 8,
         alignItems: 'center',
         marginBottom: 12
     },
-    txtBtnCadastrar: {
+    txtBotaoCadastrar: {
         color: '#fff',
         fontSize: 16,
         fontWeight: '600'
@@ -161,20 +160,20 @@ const styles = StyleSheet.create({
     acoes: {
         flexDirection: 'row'
     },
-    btnVisualizar: {
+    BotaoEditar: {
         backgroundColor: '#1E5CC8',
         paddingVertical: 8,
         paddingHorizontal: 12,
         borderRadius: 6,
         marginRight: 8
     },
-    btnExcluir: {
+    BotaoExcluir: {
         backgroundColor: '#D9534F',
         paddingVertical: 8,
         paddingHorizontal: 12,
         borderRadius: 6
     },
-    txtBtn: {
+    txtBotao: {
         color: '#fff',
         fontWeight: '700'
     },
