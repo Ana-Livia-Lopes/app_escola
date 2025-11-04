@@ -14,7 +14,7 @@ export default class Professor {
 
     private static _professor: Professor | undefined;
 
-    private static get professor() { return this._professor; }
+    public static get professor() { return this._professor; }
 
     public static async entrar(email: string, senha: string): Promise<Resultado<Professor>> {
         email = email.trim();
