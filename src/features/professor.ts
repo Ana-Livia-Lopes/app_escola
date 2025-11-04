@@ -107,7 +107,8 @@ export default class Professor {
         if (uid) {
             const { error: insertError } = await supabase.from("usuarios").insert({
                 id: uid,
-                nome: nome,
+                nome,
+                email
             });
             if (insertError) {
                 return {

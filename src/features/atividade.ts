@@ -1,3 +1,4 @@
+import { Resultado } from "./result";
 import Turma from "./turma";
 
 export default class Atividade {
@@ -13,11 +14,19 @@ export default class Atividade {
         this.turma = turma;
     }
 
-    public async editar(titulo: string | undefined, descricao: string | undefined) {}
+    public async editar(titulo: string | undefined, descricao: string | undefined): Promise<Resultado<Atividade>> {
+        throw Error();
+    }
 
-    public async excluir() {}
+    public async excluir(): Promise<Resultado<void>> {
+        throw Error();
+    }
 
-    public static async listar(turmaId: number) {}
+    public static async listar(turmaId: number): Promise<Resultado<Atividade[]>> {
+        throw Error();
+    }
 
-    public static async criar(turmaId: number, titulo: string, descricao: string) {}
+    public static async criar(turmaId: number, titulo: string, descricao: string): Promise<Resultado<Atividade>> {
+        throw Error();
+    }
 }
