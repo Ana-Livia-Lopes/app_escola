@@ -9,13 +9,20 @@ const Drawer = createDrawerNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator>
+      <Drawer.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#8b9fc0ff',
+          },
+          headerTintColor: '#ffffffff',
+        }}>
         {(Object.entries(screens).map(([name, config]) =>
           <Drawer.Screen
             key={"Screen." + name}
             name={name}
             component={config.component}
             options={config.options}
+
           />
         ))}
       </Drawer.Navigator>
