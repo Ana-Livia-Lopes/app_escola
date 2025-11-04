@@ -2,10 +2,11 @@ import React from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationParameter } from "../features/navigation";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import Professor from '../features/professor';
 
 export default function ListarAtividades({ navigation }: NavigationParameter<"ListarAtividades">) {
 
-    const alertSair = () => Alert.alert('Atenção', 'Você tem certeza que deseja sair da sua conta?');
+    const alertSair = () => Professor.sair().then(() => navigation.navigate("Autenticacao"));
     const Editar = (id: string) => {
         Alert.alert('Editar', 'Visualizando atividade ' + id);
     }
