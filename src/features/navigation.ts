@@ -8,6 +8,7 @@ import CadastroTurma from "../screens/CadastroTurma";
 import Inicio from "../screens/Inicio";
 import ListarAtividades from "../screens/ListarAtividades";
 import ListarTurmas from "../screens/ListarTurmas";
+import CadastroProfessor from "../screens/CadastroProfessor";
 
 type NativeStackNavigationOptionsCallback = (props: {
     route: RouteProp<ParamListBase, "Cadastro">;
@@ -36,6 +37,7 @@ class Screens {
     Autenticacao: ParamItem<"Autenticacao"> = { component: Autenticacao };
     CadastroAtividade: ParamItem<"CadastroAtividade"> = { component: CadastroAtividade };
     CadastroTurma: ParamItem<"CadastroTurma"> = { component: CadastroTurma };
+    CadastroProfessor: ParamItem<"CadastroProfessor"> = { component: CadastroProfessor };
     ListarAtividades: ParamItem<"ListarAtividades"> = { component: ListarAtividades }
     ListarTurmas: ParamItem<"ListarTurmas"> = { component: ListarTurmas }
 

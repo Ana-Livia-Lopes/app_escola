@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationParameter } from "../features/navigation";
 import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 
-export default function CadastroAtividade({ navigation }: NavigationParameter<"CadastroAtividade">) {
+export default function CadastroProfessor({ navigation }: NavigationParameter<"CadastroProfessor">) {
     const cadastrar = () => {
-        Alert.alert('Sucesso', 'Atividade cadastrada com sucesso!', [
+        Alert.alert('Sucesso', 'Cadastro realizado com sucesso!', [
             { text: 'OK', onPress: () => navigation.goBack() }
         ]);
     }
@@ -19,28 +19,30 @@ export default function CadastroAtividade({ navigation }: NavigationParameter<"C
             <View style={styles.container}>
                 <View style={styles.card}>
                     <Image source={require('../../assets/logo.png')} style={styles.logo} />
-                    
-                    <Text style={styles.titulo}>Nova Atividade</Text>
 
-                    <Text style={styles.label}>Título da Atividade</Text>
+                    <Text style={styles.label}>Nome Completo</Text>
                     <TextInput
-                        placeholder="Digite o título da atividade"
+                        placeholder="Digite seu nome completo"
                         style={styles.input}
-
                     />
 
-                    <Text style={styles.label}>Descrição</Text>
+                    <Text style={styles.label}>E-mail</Text>
                     <TextInput
-                        placeholder="Digite a descrição da atividade"
-                        style={[styles.input, styles.textArea]}
-                        multiline={true}
-                        numberOfLines={4}
-                        textAlignVertical="top"
+                        placeholder="Digite seu e-mail"
+                        style={styles.input}
+                        keyboardType="email-address"
+                    />
+
+                    <Text style={styles.label}>Senha</Text>
+                    <TextInput
+                        placeholder="Digite sua senha"
+                        style={styles.input}
+                        secureTextEntry
                     />
 
 
                     <TouchableOpacity style={styles.BotaoCadastrar} onPress={cadastrar}>
-                        <Text style={styles.txtBotaoCadastrar}>Criar Atividade</Text>
+                        <Text style={styles.txtBotaoCadastrar}>Criar Conta</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.BotaoCancelar} onPress={cancelar}>
@@ -49,7 +51,7 @@ export default function CadastroAtividade({ navigation }: NavigationParameter<"C
                 </View>
             </View>
         </SafeAreaView>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -95,10 +97,6 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 12,
         fontSize: 16
-    },
-    textArea: {
-        height: 100,
-        textAlignVertical: 'top'
     },
     BotaoCadastrar: {
         backgroundColor: '#1E5CC8',
