@@ -42,7 +42,7 @@ export default function Inicio({ navigation }: NavigationParameter<"Inicio">) {
                 <Text style={styles.tituloLista}>Minhas turmas</Text>
 
                 <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 24 }}>
-                    <View style={styles.turma}>
+                    <TouchableOpacity style={styles.turma} onPress={() => navigation.navigate('ListarAtividades')} activeOpacity={0.9}>
                         <View style={styles.info}>
                             <Text style={styles.nomeTurma}>3ºA</Text>
                             <Text style={styles.tag}>gh6fs02j</Text>
@@ -55,9 +55,9 @@ export default function Inicio({ navigation }: NavigationParameter<"Inicio">) {
                                 <Text style={styles.txtBotao}>Excluir</Text>
                             </TouchableOpacity>
                         </View>
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={styles.turma}>
+                    <TouchableOpacity style={styles.turma} onPress={() => navigation.navigate('ListarAtividades')} activeOpacity={0.9}>
                         <View style={styles.info}>
                             <Text style={styles.nomeTurma}>3ºB</Text>
                             <Text style={styles.tag}>f8sm30sx</Text>
@@ -70,9 +70,9 @@ export default function Inicio({ navigation }: NavigationParameter<"Inicio">) {
                                 <Text style={styles.txtBotao}>Excluir</Text>
                             </TouchableOpacity>
                         </View>
-                    </View>
+                    </TouchableOpacity>
 
-                    <View style={styles.turma}>
+                    <TouchableOpacity style={styles.turma} onPress={() => navigation.navigate('ListarAtividades')} activeOpacity={0.9}>
                         <View style={styles.info}>
                             <Text style={styles.nomeTurma}>2ºC</Text>
                             <Text style={styles.tag}>l8sg5cj1</Text>
@@ -85,7 +85,7 @@ export default function Inicio({ navigation }: NavigationParameter<"Inicio">) {
                                 <Text style={styles.txtBotao}>Excluir</Text>
                             </TouchableOpacity>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 </ScrollView>
 
                 
