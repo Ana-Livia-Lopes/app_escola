@@ -1,4 +1,5 @@
 import { NavigationProp, ParamListBase, RouteProp } from "@react-navigation/native"
+import { DrawerNavigationOptions } from "@react-navigation/drawer";
 import React from "react";
 import { NativeStackNavigationOptions, NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Autenticacao from "../screens/Autenticacao";
@@ -20,6 +21,7 @@ export interface ParamItem<P extends ScreenNames, T = undefined> {
     component: React.ComponentType<NavigationParameterItem<P>>,
     // params: T,
     options?: NativeStackNavigationOptions
+        | DrawerNavigationOptions
         | NativeStackNavigationOptionsCallback
         | undefined
 }
@@ -27,7 +29,10 @@ export interface ParamItem<P extends ScreenNames, T = undefined> {
 class Screens {
     private constructor() {}
 
-    Inicio: ParamItem<"Inicio"> = { component: Inicio };
+    Inicio: ParamItem<"Inicio"> = { 
+        component: Inicio,
+
+    };
     Autenticacao: ParamItem<"Autenticacao"> = { component: Autenticacao };
     CadastroAtividade: ParamItem<"CadastroAtividade"> = { component: CadastroAtividade };
     CadastroTurma: ParamItem<"CadastroTurma"> = { component: CadastroTurma };
