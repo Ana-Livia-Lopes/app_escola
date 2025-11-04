@@ -1,23 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationParameter } from "../features/navigation";
 import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 
-interface FormCadastrar {
-    nome: string;
-    quantidadeAlunos: number;
-    tag: string;
-    disciplina: string
-}
-
 export default function CadastroTurma({ navigation }: NavigationParameter<"CadastroTurma">) {
-    const [ form, setForm ] = useState<FormCadastrar>({
-        nome: "",
-        quantidadeAlunos: 0,
-        tag: "",
-        disciplina: ""
-    });
-    
     const cadastrar = () => {
         Alert.alert('Sucesso', 'Turma cadastrada com sucesso!', [
             { text: 'OK', onPress: () => navigation.goBack() }
@@ -47,6 +33,11 @@ export default function CadastroTurma({ navigation }: NavigationParameter<"Cadas
                         placeholder="Digite a quantidade de alunos"
                         keyboardType="numeric"
                         style={styles.input}
+                    />
+
+                    <Text style={styles.label}>Disciplina</Text>
+                    <TextInput style={styles.input}
+                        placeholder="Digite o nome da disciplina"
                     />
 
                     <Text style={styles.label}>ID da Turma</Text>
