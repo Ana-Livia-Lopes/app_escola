@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Alert, Modal, TextInput } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { NavigationParameter } from "../features/navigation";
+import Professor from '../features/professor';
 
 export default function Inicio({ navigation }: NavigationParameter<"Inicio">) {
 
@@ -16,14 +17,7 @@ export default function Inicio({ navigation }: NavigationParameter<"Inicio">) {
         ]
     );
 
-    const alertSair = () => Alert.alert(
-        'Atenção',
-        'Você tem certeza que deseja sair da sua conta?',
-        [
-            { text: 'Cancelar', style: 'cancel' },
-            { text: 'Sair', style: 'destructive', onPress: () => Alert.alert('Sessão encerrada', 'Você saiu') }
-        ]
-    );
+    const alertSair = () => Professor.sair().then(() => navigation.navigate("Autenticacao"));
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#8b9fc0ff" }}>
@@ -31,7 +25,7 @@ export default function Inicio({ navigation }: NavigationParameter<"Inicio">) {
                 <View style={styles.header}>
                     <Image source={require('../../assets/logo.png')} style={styles.logo} />
                     <View style={styles.headerRight}>
-                        <Text style={styles.profNome}>{'luisão (felipe cardoso)'}</Text>
+                        <Text style={styles.profNome}>{Professor.professor!.nome}</Text>
                     </View>
                 </View>
 
