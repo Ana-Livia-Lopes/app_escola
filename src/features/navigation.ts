@@ -59,7 +59,6 @@ class Screens {
     CadastroProfessor: ParamItem<"CadastroProfessor"> = {
         component: CadastroProfessor,
         options: {
-            drawerItemStyle: { display: "none" },
             title: "Cadastrar Professor"
         }
     };

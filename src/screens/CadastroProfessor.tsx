@@ -2,12 +2,38 @@ import React, { useState } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationParameter } from "../features/navigation";
 import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import Professor from '../features/professor';
+import { Status } from '../features/result';
+
+interface FormCadastrar {
+    nome: string;
+    email: string;
+    senha: string;
+}
 
 export default function CadastroProfessor({ navigation }: NavigationParameter<"CadastroProfessor">) {
-    const cadastrar = () => {
-        Alert.alert('Sucesso', 'Cadastro realizado com sucesso!', [
-            { text: 'OK', onPress: () => navigation.goBack() }
-        ]);
+    const [ form, setForm ] = useState<FormCadastrar>({
+        nome: "",
+        email: "",
+        senha: ""
+    });
+    
+    const cadastrar = async () => {
+        const resultado = await Professor.cadastrar(
+            form.nome,
+            form.email,
+            form.senha
+        );
+
+        if (resultado.status === Status.erro) {
+            Alert.alert("Erro ao cadastrar", resultado.mensagem, [
+                { text: "Ok" }
+            ]);
+        } else {
+            Alert.alert("Cadastrado com sucesso", `Professor ${form.nome} cadastrado`, [
+                { text: "Ok" },
+            ])
+        }
     }
 
     const cancelar = () => {
@@ -24,6 +50,7 @@ export default function CadastroProfessor({ navigation }: NavigationParameter<"C
                     <TextInput
                         placeholder="Digite seu nome completo"
                         style={styles.input}
+                        onChangeText={(nome) => setForm(() => ({ ...form, nome }))}
                     />
 
                     <Text style={styles.label}>E-mail</Text>
@@ -31,6 +58,7 @@ export default function CadastroProfessor({ navigation }: NavigationParameter<"C
                         placeholder="Digite seu e-mail"
                         style={styles.input}
                         keyboardType="email-address"
+                        onChangeText={(email) => setForm(() => ({ ...form, email }))}
                     />
 
                     <Text style={styles.label}>Senha</Text>
@@ -38,6 +66,7 @@ export default function CadastroProfessor({ navigation }: NavigationParameter<"C
                         placeholder="Digite sua senha"
                         style={styles.input}
                         secureTextEntry
+                        onChangeText={(senha) => setForm(() => ({ ...form, senha }))}
                     />
 
 
