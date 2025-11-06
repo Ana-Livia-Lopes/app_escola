@@ -39,12 +39,25 @@ Com este aplicativo, o docente pode realizar login, cadastrar e visualizar suas 
 
 ---
 
-**screenshots**
+## Screenshots do Aplicativo
 
-https://github.com/user-attachments/assets/12c2f373-dc90-4b8c-8acb-e3a845c90c0d
-https://github.com/user-attachments/assets/24e39d31-4ae4-42ce-9577-67b4e5034db1
-https://github.com/user-attachments/assets/9bfe3787-f812-49bb-a47d-c834c8efbe8b
-https://github.com/user-attachments/assets/134ce45d-5270-42e2-a7f9-c5e17f99ae55
-https://github.com/user-attachments/assets/29f5b7c0-17cd-4d20-bb66-65c5b64b36ae
-https://github.com/user-attachments/assets/c11a44b1-631a-474e-9c4e-6083bc5ab3ad
+### Tela de Login
+![Tela de Login](https://github.com/user-attachments/assets/12c2f373-dc90-4b8c-8acb-e3a845c90c0d)
+
+### Cadastro de Professor
+![Cadastro de Professor](https://github.com/user-attachments/assets/24e39d31-4ae4-42ce-9577-67b4e5034db1)
+
+### Tela Inicial - Lista de Turmas
+![Lista de Turmas](https://github.com/user-attachments/assets/9bfe3787-f812-49bb-a47d-c834c8efbe8b)
+
+### Cadastro de Nova Turma
+![Cadastro de Turma](https://github.com/user-attachments/assets/134ce45d-5270-42e2-a7f9-c5e17f99ae55)
+
+### Lista de Atividades da Turma
+![Lista de Atividades](https://github.com/user-attachments/assets/29f5b7c0-17cd-4d20-bb66-65c5b64b36ae)
+
+### Cadastro de Nova Atividade
+![Cadastro de Atividade](https://github.com/user-attachments/assets/c11a44b1-631a-474e-9c4e-6083bc5ab3ad)
+
+
 
