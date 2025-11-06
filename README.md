@@ -25,7 +25,7 @@ Com este aplicativo, o docente pode realizar login, cadastrar e visualizar suas 
    - Escaneie o QR Code exibido no terminal usando o aplicativo **Expo Go**.
 
 4. **Acesse o sistema com as credenciais abaixo:**
-   - **E-mail:** `lin@gmail.com`
+   - **E-mail:** `luis@gmail.com`
    - **Senha:** `senha123`
 
 ---
