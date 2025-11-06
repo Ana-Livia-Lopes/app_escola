@@ -1,13 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationParameter } from "../features/navigation";
 import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import Turma from '../features/turma';
+import { Status } from '../features/result';
 
 export default function CadastroTurma({ navigation }: NavigationParameter<"CadastroTurma">) {
-    const cadastrar = () => {
-        Alert.alert('Sucesso', 'Turma cadastrada com sucesso!', [
-            { text: 'OK', onPress: () => navigation.goBack() }
-        ]);
+    const [nome, setNome] = useState('');
+    const [quantidade, setQuantidade] = useState('');
+    const [disciplina, setDisciplina] = useState('');
+    const [tag, setTag] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const cadastrar = async () => {
+        // Validação básica
+        if (!nome.trim() || !disciplina.trim() || !tag.trim() || !quantidade.trim()) {
+            Alert.alert('Erro', 'Todos os campos são obrigatórios');
+            return;
+        }
+
+        const qtd = parseInt(quantidade);
+        if (isNaN(qtd) || qtd < 0) {
+            Alert.alert('Erro', 'Quantidade de alunos inválida');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const res = await Turma.criar(nome, disciplina, tag, qtd);
+            if (res.status === Status.okay) {
+                Alert.alert('Sucesso', 'Turma cadastrada com sucesso!', [
+                    { text: 'OK', onPress: () => navigation.goBack() }
+                ]);
+            } else {
+                Alert.alert('Erro', res.mensagem || 'Não foi possível criar a turma');
+            }
+        } catch (e: any) {
+            Alert.alert('Erro', e?.message || 'Erro desconhecido ao criar turma');
+        } finally {
+            setLoading(false);
+        }
     }
 
     const cancelar = () => {
@@ -26,6 +58,8 @@ export default function CadastroTurma({ navigation }: NavigationParameter<"Cadas
                     <TextInput
                         placeholder="Digite o nome da turma"
                         style={styles.input}
+                        value={nome}
+                        onChangeText={setNome}
                     />
 
                     <Text style={styles.label}>Quantidade de alunos</Text>
@@ -33,23 +67,39 @@ export default function CadastroTurma({ navigation }: NavigationParameter<"Cadas
                         placeholder="Digite a quantidade de alunos"
                         keyboardType="numeric"
                         style={styles.input}
+                        value={quantidade}
+                        onChangeText={setQuantidade}
                     />
 
                     <Text style={styles.label}>Disciplina</Text>
                     <TextInput style={styles.input}
                         placeholder="Digite o nome da disciplina"
+                        value={disciplina}
+                        onChangeText={setDisciplina}
                     />
 
                     <Text style={styles.label}>ID da Turma</Text>
                     <TextInput style={styles.idView}
                         placeholder="Digite uma tag única para a turma"
+                        value={tag}
+                        onChangeText={setTag}
                     />
 
-                    <TouchableOpacity style={styles.BotaoCadastrar} onPress={cadastrar}>
-                        <Text style={styles.txtBotaoCadastrar}>Criar Turma</Text>
+                    <TouchableOpacity 
+                        style={[styles.BotaoCadastrar, loading && styles.botaoDesabilitado]} 
+                        onPress={cadastrar}
+                        disabled={loading}
+                    >
+                        <Text style={styles.txtBotaoCadastrar}>
+                            {loading ? 'Criando...' : 'Criar Turma'}
+                        </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.BotaoCancelar} onPress={cancelar}>
+                    <TouchableOpacity 
+                        style={styles.BotaoCancelar} 
+                        onPress={cancelar}
+                        disabled={loading}
+                    >
                         <Text style={styles.txtBotaoCancelar}>Cancelar</Text>
                     </TouchableOpacity>
                 </View>
@@ -138,5 +188,8 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: '700'
+    },
+    botaoDesabilitado: {
+        opacity: 0.7
     }
 });

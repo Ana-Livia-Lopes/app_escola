@@ -1,13 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationParameter } from "../features/navigation";
 import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import { supabase } from '../../supabase';
 
-export default function CadastroAtividade({ navigation }: NavigationParameter<"CadastroAtividade">) {
-    const cadastrar = () => {
-        Alert.alert('Sucesso', 'Atividade cadastrada com sucesso!', [
-            { text: 'OK', onPress: () => navigation.goBack() }
-        ]);
+export default function CadastroAtividade({ navigation, route }: NavigationParameter<"CadastroAtividade">) {
+    const [titulo, setTitulo] = useState('');
+    const [descricao, setDescricao] = useState('');
+    const [entrega, setEntrega] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const cadastrar = async () => {
+        if (!titulo.trim() || !descricao.trim()) {
+            Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios');
+            return;
+        }
+
+        const turmaId = (route?.params as any)?.turmaId;
+        if (!turmaId) {
+            Alert.alert('Erro', 'Turma não especificada');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const { error } = await supabase.from('atividades').insert({
+                titulo,
+                descricao,
+                data_de_entrega: entrega,
+                turma: turmaId
+            });
+
+            if (error) throw error;
+
+            Alert.alert('Sucesso', 'Atividade cadastrada com sucesso!', [
+                { text: 'OK', onPress: () => navigation.goBack() }
+            ]);
+        } catch (error: any) {
+            Alert.alert('Erro', error.message || 'Não foi possível cadastrar a atividade');
+        } finally {
+            setLoading(false);
+        }
     }
 
     const cancelar = () => {
@@ -26,7 +59,8 @@ export default function CadastroAtividade({ navigation }: NavigationParameter<"C
                     <TextInput
                         placeholder="Digite o título da atividade"
                         style={styles.input}
-
+                        value={titulo}
+                        onChangeText={setTitulo}
                     />
 
                     <Text style={styles.label}>Descrição</Text>
@@ -36,6 +70,16 @@ export default function CadastroAtividade({ navigation }: NavigationParameter<"C
                         multiline={true}
                         numberOfLines={4}
                         textAlignVertical="top"
+                        value={descricao}
+                        onChangeText={setDescricao}
+                    />
+
+                    <Text style={styles.label}>Data de Entrega</Text>
+                    <TextInput
+                        placeholder="Digite a data de entrega"
+                        style={styles.input}
+                        value={entrega}
+                        onChangeText={setEntrega}
                     />
 
 

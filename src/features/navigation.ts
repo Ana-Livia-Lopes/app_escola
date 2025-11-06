@@ -78,7 +78,12 @@ export const screens = Screens.instance;
 export type ScreenNames = keyof Screens;
 
 export type RootStackParamList = {
-    [K in keyof Screens]: Screens[K] extends ParamItem<K, infer T> ? T : undefined;
+    Inicio: undefined;
+    Autenticacao: undefined;
+    CadastroAtividade: { turmaId: number };
+    CadastroTurma: undefined;
+    CadastroProfessor: undefined;
+    ListarAtividades: { turmaId: number; turmaNome?: string };
 }
 
 export interface NavigationParameter<N extends ScreenNames | undefined = undefined> {

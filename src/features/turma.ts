@@ -109,22 +109,42 @@ export default class Turma {
     }
 
     public async excluir(): Promise<Resultado<boolean>> {
-        const atividades = await Atividade.listar(this.id);
+        console.log('Tentando excluir turma:', this.id);
 
-        if (atividades.status === Status.erro || atividades.resultado!.length == 0) {
+        // Verifica se o professor está logado
+        if (!Professor.professor?.uid) {
+            console.log('Professor não está logado');
             return {
                 status: Status.erro,
-                mensagem: "Não é possível excluir a turma pois existem atividades associadas a ela",
+                mensagem: "Professor não está logado"
             }
         }
+
+        // Verifica se há atividades associadas diretamente via tabela 'atividades'
+        try {
+            const atividadesRes = await supabase.from("atividades").select("id").eq("turma", this.id).limit(1);
+            if (atividadesRes.error) {
+                console.log('Erro ao verificar atividades associadas:', atividadesRes.error);
+            } else if (atividadesRes.data && atividadesRes.data.length > 0) {
+                console.log('Turma tem atividades:', atividadesRes.data.length);
+                return {
+                    status: Status.erro,
+                    mensagem: "Não é possível excluir a turma pois existem atividades associadas a ela",
+                }
+            }
+        } catch (e) {
+            console.log('Erro inesperado ao verificar atividades:', e);
+        }
         
+        console.log('Executando delete no Supabase para turma:', this.id);
         const result = await supabase
             .from("turmas")
             .delete()
             .eq("id", this.id)
-            .eq("professor", Professor.professor?.uid);
+            .eq("professor", Professor.professor.uid);
 
         if (result.error) {
+            console.log('Erro ao excluir:', result.error);
             return {
                 status: Status.erro,
                 mensagem: result.error.message,
@@ -132,6 +152,7 @@ export default class Turma {
         }
 
         // Verifica se algum registro foi afetado
+        console.log('Registros afetados:', result.count);
         if (result.count === 0) {
             return {
                 status: Status.erro,
@@ -139,6 +160,7 @@ export default class Turma {
             }
         }
 
+        console.log('Turma excluída com sucesso');
         return {
             status: Status.okay,
             resultado: true,
@@ -146,13 +168,26 @@ export default class Turma {
     }
 
     public static async listar(): Promise<Resultado<Turma[]>> {
-        const result = await supabase.from("turmas").select().eq("professor", Professor.professor?.uid);
+        if (!Professor.professor?.uid) {
+            return {
+                status: Status.erro,
+                mensagem: "Professor não está logado"
+            }
+        }
+
+        console.log('Buscando turmas para professor:', Professor.professor.uid); // Debug
+        const result = await supabase.from("turmas").select().eq("professor", Professor.professor.uid);
+        
         if (result.error) {
+            console.log('Erro ao buscar turmas:', result.error); // Debug
             return {
                 status: Status.erro,
                 mensagem: result.error.message,
             }
         }
+
+        console.log('Dados retornados:', result.data); // Debug
+        
         const turmas: Turma[] = [];
         if (result.data) {
             for (const row of result.data) {
@@ -162,7 +197,7 @@ export default class Turma {
                     row.disciplina,
                     row.tag,
                     row.quantidadeAlunos,
-                    Professor.professor!
+                    Professor.professor
                 ));
             }
         }

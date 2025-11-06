@@ -1,23 +1,134 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Alert, Modal, TextInput } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { NavigationParameter } from "../features/navigation";
 import Professor from '../features/professor';
+import Turma from '../features/turma';
+import { Status } from '../features/result';
 
 export default function Inicio({ navigation }: NavigationParameter<"Inicio">) {
 
     const [modalEditarVisible, setModalEditarVisible] = useState(false);
+    const [turmas, setTurmas] = useState<Turma[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [selectedTurma, setSelectedTurma] = useState<Turma | null>(null);
+    const [editNome, setEditNome] = useState('');
+    const [editDisciplina, setEditDisciplina] = useState('');
+    const [editQuantidade, setEditQuantidade] = useState('');
+    const [editTag, setEditTag] = useState('');
+    const [savingEdit, setSavingEdit] = useState(false);
 
-    const alertExcluirTurma = () => Alert.alert(
-        'Atenção',
-        'Deseja realmente excluir a turma?',
-        [
-            { text: 'Não', style: 'cancel' },
-            { text: 'Sim, excluir', style: 'destructive', onPress: () => Alert.alert('Excluído', 'Turma excluída') }
-        ]
-    );
+    
 
     const alertSair = () => Professor.sair().then(() => navigation.navigate("Autenticacao"));
+
+    const carregarTurmas = async () => {
+        setLoading(true);
+        try {
+            const res = await Turma.listar();
+            console.log('Resposta do listar:', res); // Debug
+            if (res.status === Status.okay && res.resultado) {
+                console.log('Turmas encontradas:', res.resultado.length); // Debug
+                setTurmas(res.resultado);
+            } else {
+                console.log('Erro ao listar:', res.mensagem); // Debug
+                Alert.alert('Erro', res.mensagem || 'Não foi possível carregar as turmas');
+            }
+        } catch (e: any) {
+            console.log('Erro ao listar:', e); // Debug
+            Alert.alert('Erro', e?.message || 'Erro desconhecido ao listar turmas');
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            // Recarrega as turmas sempre que a tela recebe foco
+            carregarTurmas();
+        });
+
+        // Carrega turmas na montagem inicial
+        carregarTurmas();
+
+        // Limpa o listener quando o componente for desmontado
+        return unsubscribe;
+    }, [navigation]);
+
+    const confirmarExcluir = (turma: Turma) => {
+        Alert.alert(
+            'Atenção',
+            `Deseja realmente excluir a turma ${turma.nome}?`,
+            [
+                { text: 'Não', style: 'cancel' },
+                { 
+                    text: 'Sim, excluir', 
+                    style: 'destructive', 
+                    onPress: async () => {
+                        try {
+                            console.log('Iniciando exclusão da turma:', turma.id);
+                            const res = await turma.excluir();
+                            
+                            if (res.status === Status.okay) {
+                                console.log('Exclusão bem sucedida, atualizando lista');
+                                // Remove da lista local
+                                setTurmas(prev => prev.filter(t => t.id !== turma.id));
+                                Alert.alert('Excluído', 'Turma excluída com sucesso');
+                            } else {
+                                console.log('Erro na exclusão:', res.mensagem);
+                                Alert.alert('Erro', res.mensagem || 'Não foi possível excluir a turma');
+                            }
+                        } catch (e: any) {
+                            console.log('Erro ao tentar excluir:', e);
+                            Alert.alert('Erro', 'Erro inesperado ao tentar excluir a turma');
+                        }
+                    }
+                }
+            ]
+        );
+    }
+
+    const abrirEditar = (turma: Turma) => {
+        setSelectedTurma(turma);
+        setEditNome(turma.nome ?? '');
+        setEditDisciplina(turma.disciplina ?? '');
+        setEditQuantidade(String((turma as any).quantidadeAlunos ?? ''));
+        setEditTag(turma.tag ?? '');
+        setModalEditarVisible(true);
+    }
+
+    const salvarEdicao = async () => {
+        if (!selectedTurma) return;
+
+        if (!editNome.trim() || !editDisciplina.trim() || !editTag.trim() || !editQuantidade.trim()) {
+            Alert.alert('Erro', 'Todos os campos são obrigatórios');
+            return;
+        }
+
+        const qtd = parseInt(editQuantidade);
+        if (isNaN(qtd) || qtd < 0) {
+            Alert.alert('Erro', 'Quantidade inválida');
+            return;
+        }
+
+        setSavingEdit(true);
+        try {
+            const res = await selectedTurma.editar(editNome, editDisciplina, editTag, qtd);
+            if (res.status === Status.okay && res.resultado) {
+                setTurmas(prev => prev.map(t => t.id === selectedTurma.id ? res.resultado! : t));
+                Alert.alert('Sucesso', 'Turma atualizada');
+                setModalEditarVisible(false);
+                setSelectedTurma(null);
+            } else {
+                Alert.alert('Erro', res.mensagem || 'Não foi possível atualizar a turma');
+            }
+        } catch (e: any) {
+            console.log('Erro ao editar turma:', e);
+            Alert.alert('Erro', 'Erro inesperado ao editar a turma');
+        } finally {
+            setSavingEdit(false);
+        }
+    }
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "#8b9fc0ff" }}>
@@ -36,50 +147,35 @@ export default function Inicio({ navigation }: NavigationParameter<"Inicio">) {
                 <Text style={styles.tituloLista}>Minhas turmas</Text>
 
                 <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 24 }}>
-                    <TouchableOpacity style={styles.turma} onPress={() => navigation.navigate('ListarAtividades')} activeOpacity={0.9}>
-                        <View style={styles.info}>
-                            <Text style={styles.nomeTurma}>3ºA</Text>
-                            <Text style={styles.tag}>gh6fs02j</Text>
-                        </View>
-                        <View style={styles.acoes}>
-                            <TouchableOpacity style={styles.BotaoEditar} onPress={() => setModalEditarVisible(true)}>
-                                <Text style={styles.txtBotao}>Editar</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.BotaoExcluir} onPress={() => alertExcluirTurma()}>
-                                <Text style={styles.txtBotao}>Excluir</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
+                    {loading ? (
+                        <Text style={{ color: '#fff', marginTop: 8 }}>Carregando turmas...</Text>
+                    ) : (
+                        <>
+                            {turmas.map((turma) => (
+                                <TouchableOpacity key={turma.id} style={styles.turma} onPress={() => (navigation as any).navigate('ListarAtividades', { turmaId: turma.id, turmaNome: turma.nome })} activeOpacity={0.9}>
+                                    <View style={styles.info}>
+                                        <Text style={styles.nomeTurma}>{turma.nome}</Text>
+                                        <Text style={styles.disciplina}>{turma.disciplina}</Text>
+                                        <Text style={styles.tag}>{turma.tag}</Text>
+                                    </View>
+                                    <View style={styles.acoes}>
+                                        <TouchableOpacity style={styles.BotaoEditar} onPress={() => abrirEditar(turma)}>
+                                            <Text style={styles.txtBotao}>Editar</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.BotaoExcluir} onPress={() => confirmarExcluir(turma)}>
+                                            <Text style={styles.txtBotao}>Excluir</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </TouchableOpacity>
+                            ))}
 
-                    <TouchableOpacity style={styles.turma} onPress={() => navigation.navigate('ListarAtividades')} activeOpacity={0.9}>
-                        <View style={styles.info}>
-                            <Text style={styles.nomeTurma}>3ºB</Text>
-                            <Text style={styles.tag}>f8sm30sx</Text>
-                        </View>
-                        <View style={styles.acoes}>
-                            <TouchableOpacity style={styles.BotaoEditar} onPress={() => setModalEditarVisible(true)}>
-                                <Text style={styles.txtBotao}>Editar</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.BotaoExcluir} onPress={() => alertExcluirTurma()}>
-                                <Text style={styles.txtBotao}>Excluir</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.turma} onPress={() => navigation.navigate('ListarAtividades')} activeOpacity={0.9}>
-                        <View style={styles.info}>
-                            <Text style={styles.nomeTurma}>2ºC</Text>
-                            <Text style={styles.tag}>l8sg5cj1</Text>
-                        </View>
-                        <View style={styles.acoes}>
-                            <TouchableOpacity style={styles.BotaoEditar} onPress={() => setModalEditarVisible(true)}>
-                                <Text style={styles.txtBotao}>Editar</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.BotaoExcluir} onPress={() => alertExcluirTurma()}>
-                                <Text style={styles.txtBotao}>Excluir</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
+                            {turmas.length === 0 && (
+                                <Text style={{ color: '#fff', marginTop: 8, textAlign: 'center' }}>
+                                    Nenhuma turma encontrada. Clique em "Cadastrar turma" para começar.
+                                </Text>
+                            )}
+                        </>
+                    )}
                 </ScrollView>
 
                 
@@ -88,24 +184,26 @@ export default function Inicio({ navigation }: NavigationParameter<"Inicio">) {
                     animationType="slide"
                     transparent={true}
                     visible={modalEditarVisible}
-                    onRequestClose={() => setModalEditarVisible(false)}
+                    onRequestClose={() => { setModalEditarVisible(false); setSelectedTurma(null); }}
                 >
                     <View style={styles.centeredView}>
                         <View style={styles.modalView}>
                             <Text style={styles.modalTitle}>Editar Turma</Text>
                             <Text style={styles.label}>Nome da Turma</Text>
-                            <TextInput style={styles.input} placeholder="Ex: 3ºA" defaultValue="3ºA" />
+                            <TextInput style={styles.input} placeholder="Ex: 3ºA" value={editNome} onChangeText={setEditNome} />
                             <Text style={styles.label}>Quantidade</Text>
-                            <TextInput style={styles.input} placeholder="Ex: 30" keyboardType='numeric'/>
+                            <TextInput style={styles.input} placeholder="Ex: 30" keyboardType='numeric' value={editQuantidade} onChangeText={setEditQuantidade} />
                             <Text style={styles.label}>Disciplina</Text>
-                            <TextInput style={styles.input} placeholder="Ex: Matemática" />
+                            <TextInput style={styles.input} placeholder="Ex: Matemática" value={editDisciplina} onChangeText={setEditDisciplina} />
+                            <Text style={styles.label}>Tag</Text>
+                            <TextInput style={styles.input} placeholder="Ex: gh6fs02j" value={editTag} onChangeText={setEditTag} />
 
                             <View style={styles.modalButtons}>
-                                <TouchableOpacity style={[styles.modalButton, styles.buttonCancel]} onPress={() => setModalEditarVisible(false)}>
+                                <TouchableOpacity style={[styles.modalButton, styles.buttonCancel]} onPress={() => { setModalEditarVisible(false); setSelectedTurma(null); }}>
                                     <Text style={styles.textButtonCancel}>Cancelar</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.modalButton, styles.buttonConfirm]} onPress={() => setModalEditarVisible(false)}>
-                                    <Text style={styles.textButtonConfirm}>Salvar</Text>
+                                <TouchableOpacity style={[styles.modalButton, styles.buttonConfirm]} onPress={salvarEdicao} disabled={savingEdit}>
+                                    <Text style={styles.textButtonConfirm}>{savingEdit ? 'Salvando...' : 'Salvar'}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -282,5 +380,10 @@ const styles = StyleSheet.create({
     textButtonConfirm: {
         color: '#fff',
         fontWeight: '700'
+    },
+    disciplina: {
+        color: '#666',
+        fontSize: 12,
+        marginTop: 2
     }
 });
